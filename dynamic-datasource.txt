@@ -1,0 +1,92 @@
+ <!-- https://mvnrepository.com/artifact/com.baomidou/dynamic-datasource-spring-boot-starter -->
+        <!--动态数据源配置-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+yml配置 及 注释说明
+spring:
+  datasource:
+      dynamic:
+        druid: #以下是全局默认值，可以全局更改
+          # 下面为连接池的补充设置，应用到上面所有数据源中
+          # 初始化大小，最小，最大
+          initialSize: 1
+          minIdle: 3
+          maxActive: 100
+          # 配置获取连接等待超时的时间
+          maxWait: 6000
+          # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+          timeBetweenEvictionRunsMillis: 1000
+          # 配置一个连接在池中最小生存的时间，单位是毫秒
+          minEvictableIdleTimeMillis: 30000
+          validationQuery: select 'x' FROM DUAL
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+          # 打开PSCache，并且指定每个连接上PSCache的大小
+          poolPreparedStatements: true
+          maxPoolPreparedStatementPerConnectionSize: 20
+          # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+          filters: stat,wall,slf4j
+          # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+          connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+        primary: master #设置默认的数据源或者数据源组,默认值即为master
+        strict: true #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+        datasource:
+          master:
+            url: jdbc:mysql://localhost:3306/dbname1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+            username: XXXX
+            password: XXXX
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            type: com.alibaba.druid.pool.DruidDataSource
+          # strict为false时候，可以不配置从数据源
+          slave_1:
+            url: jdbc:mysql://localhost:3306/dbname2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+            username: xxxx
+            password: xxxx
+            driver-class-name: com.mysql.jdbc.Driver
+            type: com.alibaba.druid.pool.DruidDataSource
+#   集成多数据源，需要排除druid默认配置，从动态数据源获取druid配置
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+
+代码中使用多数据源
+
+    使用 @DS 切换数据源。@DS 可以注解在方法上或类上，同时存在就近原则 方法上注解 优先于 类上注解。
+
+注解             结果
+
+没有@DS          使用默认数据库
+
+@DS("dbName")   dbName可以为组名也可以为具体某个库的名称
+
+建议在service层类上或者方法添加@DS("dsName")，可以用来指定数据库连接那个数据库。如下示例
+
+@RestController
+@RequestMapping("/dbTest")
+public class DynamicDatasourceTest {
+    @Autowired
+    private UserServiceImpl userService;
+
+    @GetMapping("/list")
+    public ResponseResult<List<SAuUser>> list() {
+        final List<SAuUser> list = userService.selectAll();
+        return  ResponseResult.renderSuccess(list, "获取用户信息成功");
+    }
+}
+
+//建议在service层类上或者方法添加@DS("dsName")，可以用来指定数据库连接那个数据库
+@Service
+@DS("slave_1")  // slave_1 多数据源从库名称 ，如果不使用@DB注解，默认连接主库
+class UserServiceImpl {
+    @Autowired
+    private ISAuUserService userService;
+
+    public List<SAuUser> selectAll() {
+        final List<SAuUser> list = userService.list();
+        return list;
+    }
+
+}
