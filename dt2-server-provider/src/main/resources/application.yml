@@ -1,0 +1,61 @@
+server:
+  port: 6688
+  servlet:
+    context-path: /JQiCar
+dubbo:
+  application:
+    name: myProvider
+    #禁用QOS同一台机器可能会有端口冲突
+    qos-enable: false
+    qos-accept-foreign-ip: false
+  registry:
+    address: nacos://127.0.0.1:8818
+  scan:
+    base-packages: com.jqcx.service # 此处可以用@EnableDubbo 或者@DubboComponentScan代替 例：@DubboComponentScan(basePackages ="com.xxxx.xx.xxxx.service.dubbo") 放在启动类上方
+  # 协议配置，用于配置提供服务的协议信息，协议由提供方指定，消费方被动接受  dubbo端口
+  protocol:
+    #id: dubbo
+    name: dubbo
+    port: 20880
+  #provider:
+    #version: 2.7.8
+    #registries: 0 #提供者无需重试次数
+    #timeout: 6000 #默认超时时间只有1秒
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: satoken
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  mapper-locations: mappers/*/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  #type-aliases-package: com.wsy.dcxt.pojo
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    db-config:
+      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+    #驼峰下划线转换
+    db-column-underline: true
+spring:
+  datasource:
+    dynamic:
+    druid:
+      mysql:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.jqcx</groupId>
+    <artifactId>dt2-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>v2.0</version>
+    <properties>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <java.version>11</java.version>
+        <springboot.version>2.6.1</springboot.version>
+        <druid.version>1.2.6</druid.version>
+        <pro.version>v2.0</pro.version>
+        <dubbo.version>3.0.4</dubbo.version>
+        <!--nocas 单独配置 版本-->
+        <dubbo-registry-nacos.version>3.0.4</dubbo-registry-nacos.version>
+        <nocas-client.version>2.0.3</nocas-client.version>
+        <!--nacos 与springboot配置版本-->
+        <nacos-springboot-starter.version>0.2.7</nacos-springboot-starter.version>
+        <mybatis-plus.version>3.4.3.2</mybatis-plus.version>
+        <druid.starter.version>1.2.6</druid.starter.version>
+        <druid.dynamic.version>3.4.1</druid.dynamic.version>
+        <!--json字符串 工具 谷歌的gosn依赖-->
+        <google.gson.version>2.8.9</google.gson.version>
+    </properties>
+    <modules>
+        <module>dt2-sa-common-api</module>
+        <module>dt2-sa-common-utils</module>
+        <module>dt2-server-provider</module>
+        <module>dt2-server-provider-app</module>
+        <module>dt2-server-comsumer-app</module>
+        <module>dt2-server-consumer</module>
+    </modules>
+    <!--dependencyManagement 依赖管理 主要时针对子模块,子模块引入对应的依赖(不需写版本号) 即可,依赖管理中的依赖不会被下载或打包.-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!--<artifactId>spring-boot-starter-parent</artifactId>
+                    依赖管理springboot的父依赖 如下写法 上面是正常创建springboot项目的父依赖
+                    里面包含大量常用的依赖,字模块中只需要引入依赖,不需要版本号,运行时,打包时即可获得对应的依赖
+                -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jqcx</groupId>
+                <artifactId>dt2-sa-common-utils</artifactId>
+                <version>${pro.version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>dt2-sa-common-api</artifactId>
+                <groupId>com.jqcx</groupId>
+                <version>${pro.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-recipes -->
+            <!--zkclient适用于dubbo2.6版本及之前的版本，dubbo更高的版本已经使用apache-curator了。而我们上面导的版本为2.7之后的dubbo版本-->
+            <!--<dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>4.2.0</version>
+            </dependency>-->
+            <!--!  https://mvnrepository.com/artifact/org.apache.curator/curator-framework -->
+            <!--<dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>4.2.0</version>
+            </dependency>-->
+            <!--传输数据格式 等数据处理 用到-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.72</version>
+            </dependency>
+            <!--nacos+dubbo-->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-registry-nacos</artifactId>
+                <version>${dubbo-registry-nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-client</artifactId>
+                <version>${nocas-client.version}</version>
+            </dependency>
+            <!--nacos+dubbo    end-->
+            <!--nacos-config-spring-boot-starter 这玩意不知道怎么用,不知道干什么用的
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-config-spring-boot-starter</artifactId>
+                <version>${nacos-springboot-starter.version}</version>
+            </dependency>-->
+            <!--nacos集群配置支持依赖
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>2.0.0</version>
+            </dependency>-->
+            <!-- nacos集群配置支持依赖 https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-discovery -->
+            <!--<dependency>
+               <groupId>com.alibaba.cloud</groupId>
+               <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+               <version>2021.1</version>
+           </dependency>-->
+            <!-- https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-boot-starter -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>1.28.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+           <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.starter.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.baomidou/dynamic-datasource-spring-boot-starter -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>${druid.dynamic.version}</version>
+            </dependency>
+        </dependencies>
+   </dependencyManagement>
+   <build>
+       <plugins>
+           <plugin>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-maven-plugin</artifactId>
+               <version>${springboot.version}</version>
+               <configuration>
+                   <excludes>
+                       <exclude>
+                           <groupId>org.projectlombok</groupId>
+                           <artifactId>lombok</artifactId>
+                       </exclude>
+                   </excludes>
+               </configuration>
+           </plugin>
+       </plugins>
+   </build>
+
+</project>

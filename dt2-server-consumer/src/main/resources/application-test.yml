@@ -1,0 +1,26 @@
+server:
+  port: 6680
+  servlet:
+    context-path: /JQiCar
+# ----------------------dubbo配置 消费端 begin-------------------
+dubbo:
+  registry:  #单注册中心，注意属性级别 dubbo.registry
+    register: false # true(默认），false:表示服务不注册到注册中心（只订阅，直连服务正常），且dubbo-admin不显示
+#    address: zookeeper://127.0.0.1:2181
+    address: nacos://127.0.0.1:2181
+  registries:   # 多注册中心
+    consumer1:
+      register: false #表示服务不注册到注册中心(此时下面的地址不会使用，因为comsume走直连)
+      address: zookeeper://127.0.0.1:2181
+    consumer2:
+      register: false #表示服务不注册到注册中心(此时下面的地址不会使用，因为comsume走直连)
+      address: zookeeper://127.0.0.1:2183
+  application:
+    name: myConsumer
+  scan:
+    base-packages: com.jqcx.service
+  consumer:
+    timeout: 3000
+    check: false  # 默认true，服务启动时检查是否可用，服务不可用时无法启动，设置为false则不检查
+    retries: 2 # 服务重试次数
+# ----------------------dubbo配置 消费端 end-------------------

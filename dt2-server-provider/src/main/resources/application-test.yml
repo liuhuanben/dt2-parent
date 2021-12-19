@@ -1,0 +1,42 @@
+server:
+  port: 6688
+  servlet:
+    context-path: /JQiCar
+dubbo:
+  #registry: #单注册中心，注意属性级别：dubbo.registry,注意多注册中心格式 @service(registry={"registry1","registry2","registry3"}
+  #    register: false #默认为true false：表示服务网不注册到注册中心（只订阅，直连服务正常，且dubbo-admin不显示
+  #    address： zookeeper://55.55..55.82:2181
+  #多注册中心配置 多注册中心注意属性级别：dubbo.registries，不同的方法可以用@service(registry={"registry2"}),指定不同的注册中心
+  config:
+    multiple: true #配置多个
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  application:
+    name: myProvider
+    registries[0]:
+      id: my-zk
+      group: my-zk #注意不要重复 参考spring容器中 ，类名不能重复
+      #protocol: zookeeper  #使用哪个配置中心：apollo、zookeeper、nacos等。
+      address: zookeeper://127.0.0.1:2181 # 指定protocol，则address可以简化为127.0.0.1:2181;不指定protocol，则address取值为zookeeper://127.0.0.1:2181
+      default: true
+      timeout: 5000
+    registries[1]:
+      id: server-zk
+      group: server-zk
+      #protocol: zookeeper
+      address: zookeeper://127.0.0.1:2183
+      timeout: 5000
+  scan:
+    base-packages: com.jqcx.service # 此处可以用@EnableDubbo 或者@DubboComponentScan代替 例：@DubboComponentScan(basePackages ="com.xxxx.xx.xxxx.service.dubbo") 放在启动类上方
+
+  # 协议配置，用于配置提供服务的协议信息，协议由提供方指定，消费方被动接受  dubbo端口
+  protocol:
+    #id: dubbo
+    name: dubbo
+    port: 20801
+    threadpool: fixed
+    threads: 100
+  #provider:
+    #version: 2.7.8
+    #registries: 0 #提供者无需重试次数
+    #timeout: 6000 #默认超时时间只有1秒

@@ -1,0 +1,44 @@
+server:
+  port: 6680
+  servlet:
+    context-path: /JQiCar
+# ----------------------dubbo配置 消费端 begin-------------------
+dubbo:
+  application:
+    name: myConsumer
+    #禁用QOS同一台机器可能会有端口冲突
+    qos-enable: false
+    qos-accept-foreign-ip: false
+  registry:  #单注册中心，注意属性级别 dubbo.registry
+    register: false # true(默认），false:表示服务不注册到注册中心（只订阅，直连服务正常），且dubbo-admin不显示
+#    address: zookeeper://127.0.0.1:2181
+    address: nacos://127.0.0.1:8818
+  #设置超时时间
+  consumer:
+    timeout: 4000
+spring:
+  main:
+    #解决Bean重复定义的问题
+    allow-bean-definition-overriding: true
+  application: sa-token
+# ----------------------dubbo配置 消费端 end-------------------
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: satoken
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
+location:
+  path:
+    pages:  d:/jq_page  # mac-> file:///users/local/pages/    window-> file:D:/work/cos/vue/dist
+    files:  d:/other_files
+
