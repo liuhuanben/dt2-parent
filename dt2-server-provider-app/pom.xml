@@ -3,10 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.6</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <artifactId>dt2-parent</artifactId>
+        <groupId>com.jqcx</groupId>
+        <version>v2.0</version>
     </parent>
     <groupId>com.jqcx</groupId>
     <artifactId>dt2-server-provider-app</artifactId>
@@ -27,6 +26,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jqcx</groupId>
+            <artifactId>dt2-sa-common-utils</artifactId>
+        </dependency>
+        <dependency>
+            <artifactId>dt2-sa-common-api</artifactId>
+            <groupId>com.jqcx</groupId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
     </dependencies>
 

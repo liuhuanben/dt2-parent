@@ -83,7 +83,7 @@ log.info("<< | {} | 返回给调用方的响应的报文:\n {}", msgId, JSON.toJ
         Fatal:输出每个严重的错误事件将会导致应用程序的退出的日志.
         OFF:最高等级的，用于关闭所有日志记录.
         -->
-        <Root level="trace">
+        <Root level="warn">
             <!-- 指定日志使用上面哪个处理器 -->
             <AppenderRef ref="Console" />
             <AppenderRef ref="file" />
